@@ -1,86 +1,59 @@
 package com.sena.crudbasic.model;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
-import jakarta.persistence.Table;
+import com.fasterxml.jackson.annotation.JsonView;
+import com.sena.crudbasic.model.base.BaseModel;
+import jakarta.persistence.*;
+import jakarta.validation.constraints.Min;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Size;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.NoArgsConstructor;
 
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+@EqualsAndHashCode(callSuper = false)
 @Entity
 @Table(name = "Lecciones")
-public class Leccion {
+public class Leccion extends BaseModel {
     
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "IdLeccion")
+    @JsonView(Views.Basic.class)
     private Integer idLeccion;
     
+    @NotBlank(message = "El título es obligatorio")
+    @Size(max = 150, message = "El título no puede exceder 150 caracteres")
     @Column(name = "Titulo", length = 150)
+    @JsonView(Views.Basic.class)
     private String titulo;
     
     @Column(name = "Contenido", columnDefinition = "TEXT")
+    @JsonView(Views.Basic.class)
     private String contenido;
     
+    @Min(value = 1, message = "La duración debe ser al menos 1 minuto")
     @Column(name = "DuracionMin")
+    @JsonView(Views.Basic.class)
     private Integer duracionMin;
     
+    @NotNull(message = "El curso es obligatorio")
     @ManyToOne
     @JoinColumn(name = "IdCurso", nullable = false)
+    @JsonView(Views.Detailed.class)
     private Curso curso;
     
-    // Constructor vacío
-    public Leccion() {
+    @PrePersist
+    protected void onCreate() {
+        super.onCreate();
     }
     
-    // Constructor con parámetros
-    public Leccion(Integer idLeccion, String titulo, String contenido, Integer duracionMin) {
-        this.idLeccion = idLeccion;
-        this.titulo = titulo;
-        this.contenido = contenido;
-        this.duracionMin = duracionMin;
-    }
-    
-    // Getters y Setters
-    public Integer getIdLeccion() {
-        return idLeccion;
-    }
-    
-    public void setIdLeccion(Integer idLeccion) {
-        this.idLeccion = idLeccion;
-    }
-    
-    public String getTitulo() {
-        return titulo;
-    }
-    
-    public void setTitulo(String titulo) {
-        this.titulo = titulo;
-    }
-    
-    public String getContenido() {
-        return contenido;
-    }
-    
-    public void setContenido(String contenido) {
-        this.contenido = contenido;
-    }
-    
-    public Integer getDuracionMin() {
-        return duracionMin;
-    }
-    
-    public void setDuracionMin(Integer duracionMin) {
-        this.duracionMin = duracionMin;
-    }
-    
-    public Curso getCurso() {
-        return curso;
-    }
-    
-    public void setCurso(Curso curso) {
-        this.curso = curso;
+    @PreUpdate
+    protected void onUpdate() {
+        super.onUpdate();
     }
 }
