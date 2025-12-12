@@ -1,4 +1,4 @@
-# 🎓 CRUD Basic - Proyecto Spring Boot
+#  CRUD Basic - Proyecto Spring Boot
 
 ##  Semana 1: Modelo y MER
 
